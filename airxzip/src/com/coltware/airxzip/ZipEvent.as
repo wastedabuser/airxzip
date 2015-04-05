@@ -10,9 +10,7 @@ package com.coltware.airxzip {
 	
 	import flash.events.Event;
 	import flash.utils.*;
-	
-	import mx.logging.*;
-	
+		
 	use namespace zip_internal;
 	/**
 	 *  ZIPの解凍や圧縮時のイベントクラス
@@ -20,10 +18,9 @@ package com.coltware.airxzip {
 	 */
 	public class ZipEvent extends Event{
 		
-		private static var log:ILogger = Log.getLogger("com.coltware.airxzip.ZipEvent");
-		
 		public static var ZIP_LOAD_DATA:String = "zipLoadData";
 		public static var ZIP_DATA_UNCOMPRESS:String = "zipDataUncompress";
+		public static var ZIP_DATA_UNCOMPRESS_ALL:String = "zipDataUncompressAll";
 		public static var ZIP_DATA_COMPRESS:String   = "zipDataCompress";
 		public static var ZIP_FILE_CREATED:String  = "zipFileCreated";
 		

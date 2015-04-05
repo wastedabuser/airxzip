@@ -10,8 +10,6 @@ package com.coltware.airxzip {
 	
 	import flash.utils.*;
 	
-	import mx.logging.*;
-	
 	use namespace zip_internal;
 	
 	/**
@@ -20,8 +18,6 @@ package com.coltware.airxzip {
 	 * @private
 	*/
 	public class ZipHeader {
-		
-		private static var log:ILogger = Log.getLogger("com.coltware.airxzip.ZipHeader");
 		
 		public static var HEADER_LOCAL_FILE:uint  		= 0x04034b50;
 		public static var HEADER_CENTRAL_DIR:uint 		= 0x02014b50;
@@ -448,40 +444,40 @@ package com.coltware.airxzip {
 			return ( _versionBy & 0xff );
 		}
 		
-		public function dumpLogInfo():void{
-			log.debug("[" + _signature.toString(16) + "]*************** " + getFilename() + " ****************");
-			log.debug("signature(4) : " + _signature);
-			log.debug("version(2)   : " + _version); 
-			log.debug("bit flag(2)  : " + _bitFlag.toString(2));
-			log.debug("method(2)    : " + _compressMethod); 
-			log.debug("last mod time(2) : " + _lastModTime); 
-			log.debug("last mod date(2) : " + _lastModDate);
-			log.debug("date  : " + getDate());
-			log.debug("crc32(4)     : " + _crc32.toString(16));
-			log.debug("compress size(4)        : " + _compressSize);
-			log.debug("un-compress size(4)     : " + _uncompressSize);  
-			log.debug("filename length(2)      : " + _filenameLength);
-			log.debug("extra length(2)         : " + _extraFieldLength);
+		public function dumpLogInfo():void {
+			trace("[" + _signature.toString(16) + "]*************** " + getFilename() + " ****************");
+			//trace("signature(4) : " + _signature);
+			//trace("version(2)   : " + _version); 
+			//trace("bit flag(2)  : " + _bitFlag.toString(2));
+			//trace("method(2)    : " + _compressMethod); 
+			//trace("last mod time(2) : " + _lastModTime); 
+			//trace("last mod date(2) : " + _lastModDate);
+			//trace("date  : " + getDate());
+			//trace("crc32(4)     : " + _crc32.toString(16));
+			//trace("compress size(4)        : " + _compressSize);
+			trace("un-compress size(4)     : " + _uncompressSize);  
+			//trace("filename length(2)      : " + _filenameLength);
+			//trace("extra length(2)         : " + _extraFieldLength);
 			
 			if(_extraFieldLength > 0){
 				_extraField.position = 0;
-				log.debug("extra field : " + _extraField.toString());
+				//trace("extra field : " + _extraField.toString());
 			} 
 			
 			if(_signature ==  HEADER_CENTRAL_DIR){
-				log.debug("version by1 " + ( _versionBy >> 8 ));
-				log.debug("version by2 " + ( _versionBy & 0xff ));
-				log.debug("comment size " + _commentLength);
-				log.debug("disk number  " + _diskNumber);
-				log.debug("internal file attrs " + _internalFileAttrs);
-				log.debug("external file attrs " + _externalFileAttrs);
-				log.debug("offset local header " + _offsetLocalHeader);
+				//trace("version by1 " + ( _versionBy >> 8 ));
+				//trace("version by2 " + ( _versionBy & 0xff ));
+				//trace("comment size " + _commentLength);
+				//trace("disk number  " + _diskNumber);
+				//trace("internal file attrs " + _internalFileAttrs);
+				//trace("external file attrs " + _externalFileAttrs);
+				//trace("offset local header " + _offsetLocalHeader);
 				
 				if(isDirectory()){
-					log.debug("is dir");
+					trace("is dir");
 				}
 				else{
-					log.debug("is file");
+					trace("is file");
 				}
 			}
 			

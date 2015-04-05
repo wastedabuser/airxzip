@@ -16,22 +16,18 @@ package com.coltware.airxzip.crypt {
 	
 	import flash.utils.*;
 	
-	import mx.logging.*;
-	
 	use namespace zip_internal;
 	
 	public class ZipCrypto implements ICrypto{
 		
-		private static var log:ILogger = Log.getLogger("com.coltware.airxzip.crypt.ZipCrypto");
-		
 		private static var CRYPTHEADLEN:int = 12;
-        
-    // Initial keys
-    private static var S_KEY1:int = 305419896;
-    private static var S_KEY2:int = 591751049;
-    private static var S_KEY3:int = 878082192;
-        
-    private var _key:Array;
+			
+		// Initial keys
+		private static var S_KEY1:int = 305419896;
+		private static var S_KEY2:int = 591751049;
+		private static var S_KEY3:int = 878082192;
+			
+		private var _key:Array;
 		private var _password:ByteArray;
 		private var _header:ZipHeader;
 		

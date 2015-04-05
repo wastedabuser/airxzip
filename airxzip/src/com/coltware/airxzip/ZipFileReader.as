@@ -8,8 +8,6 @@
  */
 package com.coltware.airxzip {
 	
-	import __AS3__.vec.Vector;
-	
 	import com.coltware.airxzip.crypt.ICrypto;
 	import com.coltware.airxzip.crypt.ZipCrypto;
 	
@@ -17,15 +15,11 @@ package com.coltware.airxzip {
 	import flash.filesystem.*;
 	import flash.utils.*;
 	
-	import mx.logging.*;
-	
 	use namespace zip_internal;
 	/**
 	 *  ZIPファイルを読み込むクラス
 	 */
 	public class ZipFileReader extends EventDispatcher{
-		
-		private static var log:ILogger = Log.getLogger("com.coltware.airxzip.ZipFileReader");
 		
 		private var _file:File;					//	Zipファイル
 		private var _stream:FileStream;
@@ -120,11 +114,11 @@ package com.coltware.airxzip {
 					_entries = new Array();
 					_totalEntries = _endRecord.getTotalEntries();
 					
-					log.debug("ZipEndRecord " + pos);
+					trace("ZipEndRecord " + pos);
 					break;
 				}
 				else if(sig == ZipHeader.HEADER_CENTRAL_DIR){
-					log.debug("FOUND CENTRAL " + _stream.position);
+					trace("FOUND CENTRAL " + _stream.position);
 				}
 				_stream.position = pos - 1;
 			}
@@ -176,7 +170,7 @@ package com.coltware.airxzip {
 		*
 		*/
 		public function unzip(entry:ZipEntry):ByteArray{
-			log.debug("unzip(" + entry.getFilename() + ")");
+			trace("unzip(" + entry.getFilename() + ")");
 			
 			var pos:int = entry.getLocalHeaderOffset();
 						
@@ -214,7 +208,7 @@ package com.coltware.airxzip {
 			if(method == ZipEntry.METHOD_NONE){
 			}
 			else if(method == ZipEntry.METHOD_DEFLATE){
-				log.debug("uncompress data size is + " + bytes.length);
+				trace("uncompress data size is + " + bytes.length);
 				bytes.uncompress(CompressionAlgorithm.DEFLATE);
 			}
 			else{
@@ -281,7 +275,7 @@ package com.coltware.airxzip {
 					return;
 				}
 				
-        var decrypt:ICrypto = null;
+				var decrypt:ICrypto = null;
 				for(var i:int=0;(i<_decryptors.length && decrypt == null); i++){
 					var _decrypt:ICrypto = _decryptors[i];
 					if(_decrypt.checkDecrypt(entry)){
@@ -294,13 +288,13 @@ package com.coltware.airxzip {
 				decrypt.initDecrypt(this._password,lzh);
 				
 				try{
-        	bytes = decrypt.decrypt(bytes);
-        }
-        catch(ze:ZipError){
-        	err = new ZipErrorEvent(ZipErrorEvent.ZIP_PASSWORD_ERROR);
-        	this.dispatchEvent(err);
-        }
-      }
+					bytes = decrypt.decrypt(bytes);
+				}
+				catch(ze:ZipError){
+					err = new ZipErrorEvent(ZipErrorEvent.ZIP_PASSWORD_ERROR);
+					this.dispatchEvent(err);
+				}
+			  }
 			
 			var method:int = entry.getCompressMethod();
 			if(method == ZipEntry.METHOD_NONE){
@@ -320,7 +314,7 @@ package com.coltware.airxzip {
 			this.dispatchEvent(event);
 			_unzipWorking = false;
 			_unzipNum++;
-			log.debug("unzipping " + entry.getFilename() + "..." + _unzipNum);
+			trace("unzipping " + entry.getFilename() + "..." + _unzipNum);
 			
 			execUnzip();
 		}
@@ -332,14 +326,14 @@ package com.coltware.airxzip {
 				setTimeout(unzipAsyncTimeout,delay,entry);
 			}
 			else{
-				
+				dispatchEvent(new ZipEvent(ZipEvent.ZIP_DATA_UNCOMPRESS_ALL));
 			}
 		}
 		
 		
 		
 		private function ioError(e:Event):void{
-			log.fatal("ioError " + e);
+			trace("ioError " + e);
 			this.dispatchEvent(e);
 		}
 		
@@ -359,12 +353,12 @@ package com.coltware.airxzip {
 				var sig:int = bytes.readInt();
 				var header:ZipHeader = new ZipHeader(sig);
 				header.read(bytes,_tmpBytes);
-				header.dumpLogInfo();
+				//header.dumpLogInfo();
 				var entry:ZipEntry = new ZipEntry(_stream);
 				entry.setHeader(header);
 				_entries.push(entry);
 			}
-			log.debug("parse central header end " + _entries.length);
+			trace("parse central header end " + _entries.length);
 			
 		}
 		
@@ -393,7 +387,7 @@ package com.coltware.airxzip {
 				}
 				else if(sig == ZipHeader.HEADER_CENTRAL_DIR){
 					//	CENTRAL DIRECTORY
-					log.debug("CENTRAL DIR.." + sig.toString(16));
+					trace("CENTRAL DIR.." + sig.toString(16));
 					var centralHeader:ZipHeader = new ZipHeader(sig);
 					centralHeader.read(_stream,bytes);
 				}
